@@ -9,7 +9,7 @@ namespace P2_BezierBSpline
     class Drawer
     {
 
-        Point[] CPs;
+        protected Point[] CPs;
         Point Location, ActivePoint, Mouse;
         int MaxPoints, CPcounter, ActivePointIndex;
 
@@ -17,7 +17,7 @@ namespace P2_BezierBSpline
         {
             //constructor
             Location = Point.Empty;
-            MaxPoints = 20;
+            MaxPoints = 4;
 
             CPs = new Point[MaxPoints];
 
@@ -63,12 +63,14 @@ namespace P2_BezierBSpline
             //draw line on the form
             G.DrawLine(new Pen(Brushes.PaleTurquoise, 2), CPs[indexA], CPs[indexB]);
         }
+
         protected void DrawPoint(Graphics G, int index)
         {
             //draws point on the form
             G.FillEllipse(Brushes.Black, CPs[index].X - 4, CPs[index].Y - 4, 8, 8);
             G.DrawString("p"+(index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)CPs[index].X-14, (float)CPs[index].Y-16);
         }
+
         public virtual void Draw(Graphics G)
         {
             //tekend de punten en lijnen (content hull)
@@ -79,6 +81,7 @@ namespace P2_BezierBSpline
             }
             DrawPoint(G, CPcounter - 1);
         }
+
         public virtual bool Update(Point mouse)
         {
             Mouse = new Point(Location.X + mouse.X, Location.Y + mouse.Y);
@@ -91,6 +94,7 @@ namespace P2_BezierBSpline
             }
             return false;
         }
+
         public bool Begin(Point mouse)
         {
             Mouse = new Point(Location.X + mouse.X, Location.Y + mouse.Y);
@@ -110,6 +114,7 @@ namespace P2_BezierBSpline
             }
             return false;
         }
+
         public bool End(Point mouse)
         {
             Mouse = new Point(Location.X + mouse.X, Location.Y + mouse.Y);

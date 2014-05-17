@@ -11,12 +11,12 @@ namespace P2_BezierBSpline
 {
     public partial class MainForm : Form
     {
-        Drawer Curve;
+        Bezier Curve;
 
         public MainForm()
         {
             InitializeComponent();
-            Curve = new Drawer();
+            Curve = new Bezier();
         }
 
         protected override void OnPaint(PaintEventArgs e)
