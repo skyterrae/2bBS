@@ -19,7 +19,7 @@ namespace P2_BezierBSpline
 
         public Bezier()
         {
-            DoCasteljau(25);
+            DoCasteljau();
         }
 
         public override bool Update(Point mouse)
@@ -28,7 +28,7 @@ namespace P2_BezierBSpline
 
             if (basebool)
             {
-                DoCasteljau(25);
+                DoCasteljau();
             }
             return basebool;
         }
@@ -91,19 +91,12 @@ namespace P2_BezierBSpline
                         PointF current = oldPoints[i];
                         PointF next = oldPoints[i + 1];
 
-                        bool newXBigger = next.X > current.X;
-                        bool newYBigger = next.Y > current.Y;
-
                         float newX, newY;
-                        if (newXBigger)
-                            newX = current.X + next.X * u;
-                        else newX = current.X - next.X * u;
-                        if (newYBigger)
-                            newY = current.Y + next.Y * u;
-                        else newY = current.Y - next.Y * u;
 
+                        newX = (next.X - current.X) * u;
+                        newY = (next.Y - current.Y) * u;
 
-                        PointF bezier = new PointF(newX, newY);
+                        PointF bezier = new PointF(current.X + newX, current.Y + newY);
                         restPoints.Add(bezier);
                     }
 

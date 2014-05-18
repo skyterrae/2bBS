@@ -17,11 +17,11 @@ namespace P2_BezierBSpline
         {
             //constructor
             Location = Point.Empty;
-            MaxPoints = 4;
+            MaxPoints = 6;
 
             CPs = new Point[MaxPoints];
 
-            CPcounter = 4;
+            CPcounter = 6;
             for (int i = 0; i < CPcounter; i++)
             {
                 CPs[i] = new Point(Location.X + 50 + i * 20, Location.Y + 100 - (i % 2) * 50);
