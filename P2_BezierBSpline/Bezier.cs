@@ -45,25 +45,16 @@ namespace P2_BezierBSpline
             // The y-coördinates seem to work, the x-coördinates don't at all, they range from 50-640
             // While the original 4 points of the curve range from 50-110.
 
-            //for (int i = 0; i < bezierPoints.Length - 1; i++)
-            //{
-            //    DrawBezierLine(G, i, i + 1);
-            //    DrawBezierPoint(G, i);
-            //}
-            //DrawPoint(G, bezierPoints.Length - 1);
+            for (int i = 0; i < bezierPoints.Length - 1; i++)
+            {
+                DrawBezierLine(G, i, i + 1);
+            }
         }
 
         private void DrawBezierLine(Graphics G, int indexA, int indexB)
         {
             //draw line on the form
-            G.DrawLine(new Pen(Brushes.PaleTurquoise, 2), bezierPoints[indexA], bezierPoints[indexB]);
-        }
-
-        private void DrawBezierPoint(Graphics G, int index)
-        {
-            //draws point on the form
-            G.FillEllipse(Brushes.Black, bezierPoints[index].X - 4, bezierPoints[index].Y - 4, 8, 8);
-            //G.DrawString("p" + (index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)CPs[index].X - 14, (float)CPs[index].Y - 16);
+            G.DrawLine(new Pen(Brushes.Red, 2), bezierPoints[indexA], bezierPoints[indexB]);
         }
 
         // The method that does the work. It returns an array filled with the points of the curve.
@@ -91,19 +82,12 @@ namespace P2_BezierBSpline
                         PointF current = oldPoints[i];
                         PointF next = oldPoints[i + 1];
 
-                        bool newXBigger = next.X > current.X;
-                        bool newYBigger = next.Y > current.Y;
-
                         float newX, newY;
-                        if (newXBigger)
-                            newX = current.X + next.X * u;
-                        else newX = current.X - next.X * u;
-                        if (newYBigger)
-                            newY = current.Y + next.Y * u;
-                        else newY = current.Y - next.Y * u;
 
+                        newX = (next.X - current.X) * u;
+                        newY = (next.Y - current.Y) * u;
 
-                        PointF bezier = new PointF(newX, newY);
+                        PointF bezier = new PointF(current.X + newX, current.Y + newY);
                         restPoints.Add(bezier);
                     }
 
