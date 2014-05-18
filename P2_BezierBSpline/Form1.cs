@@ -11,7 +11,7 @@ namespace P2_BezierBSpline
 {
     public partial class MainForm : Form
     {
-        Bezier Curve;
+        Drawer Curve;
 
         public MainForm()
         {

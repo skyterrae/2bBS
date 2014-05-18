@@ -19,7 +19,7 @@ namespace P2_BezierBSpline
 
         public Bezier()
         {
-            DoCasteljau();
+            DoCasteljau(25);
         }
 
         public override bool Update(Point mouse)
@@ -28,7 +28,7 @@ namespace P2_BezierBSpline
 
             if (basebool)
             {
-                DoCasteljau();
+                DoCasteljau(25);
             }
             return basebool;
         }
@@ -45,24 +45,24 @@ namespace P2_BezierBSpline
             // The y-coördinates seem to work, the x-coördinates don't at all, they range from 50-640
             // While the original 4 points of the curve range from 50-110.
 
-            //for (int i = 0; i < bezierPoints.Length - 1; i++)
-            //{
-            //    DrawBezierLine(G, i, i + 1);
-            //    DrawBezierPoint(G, i);
-            //}
-            //DrawPoint(G, bezierPoints.Length - 1);
+            for (int i = 0; i < bezierPoints.Length - 1; i++)
+            {
+                DrawBezierLine(G, i, i + 1);
+                DrawBezierPoint(G, i);
+            }
+            DrawBezierPoint(G, bezierPoints.Length - 1);
         }
 
         private void DrawBezierLine(Graphics G, int indexA, int indexB)
         {
             //draw line on the form
-            G.DrawLine(new Pen(Brushes.PaleTurquoise, 2), bezierPoints[indexA], bezierPoints[indexB]);
+            G.DrawLine(new Pen(Brushes.Lavender, 2), bezierPoints[indexA], bezierPoints[indexB]);
         }
 
         private void DrawBezierPoint(Graphics G, int index)
         {
             //draws point on the form
-            G.FillEllipse(Brushes.Black, bezierPoints[index].X - 4, bezierPoints[index].Y - 4, 8, 8);
+            G.FillEllipse(Brushes.Purple, bezierPoints[index].X - 3, bezierPoints[index].Y - 3, 6, 6);
             //G.DrawString("p" + (index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)CPs[index].X - 14, (float)CPs[index].Y - 16);
         }
 

@@ -68,7 +68,7 @@ namespace P2_BezierBSpline
         {
             //draws point on the form
             G.FillEllipse(Brushes.Black, CPs[index].X - 4, CPs[index].Y - 4, 8, 8);
-            G.DrawString("p"+(index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)CPs[index].X-14, (float)CPs[index].Y-16);
+            G.DrawString("p" + (index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)CPs[index].X - 14, (float)CPs[index].Y - 16);
         }
 
         public virtual void Draw(Graphics G)
