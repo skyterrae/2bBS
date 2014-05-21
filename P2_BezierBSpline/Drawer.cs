@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace P2_BezierBSpline
 {
-    class Drawer
+    public class Drawer
     {
 
         protected PointF[] ControlPoints;

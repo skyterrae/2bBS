@@ -28,14 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.knotControl1 = new P2_BezierBSpline.KnotControl();
             this.SuspendLayout();
+            // 
+            // knotControl1
+            // 
+            this.knotControl1.Location = new System.Drawing.Point(12, 367);
+            this.knotControl1.Name = "knotControl1";
+            this.knotControl1.Size = new System.Drawing.Size(777, 160);
+            this.knotControl1.TabIndex = 0;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(612, 314);
+            this.ClientSize = new System.Drawing.Size(802, 539);
+            this.Controls.Add(this.knotControl1);
             this.Name = "MainForm";
             this.Text = "LiniarCurve";
             this.ResumeLayout(false);
@@ -43,6 +52,8 @@
         }
 
         #endregion
+
+        private KnotControl knotControl1;
     }
 }
 

@@ -8,27 +8,25 @@ namespace P2_BezierBSpline
 {
     class BSpline : Drawer
     {
-        PointF[] BSplinePoints; 
-        KnotControl Knots;
-        float[] KnotVectorT;
-        
+        PointF[] BSplinePoints;
+        KnotControl KC;
+        float[] KnotVectorT;     
 
-        public BSpline() : base(25, 5)
+        public BSpline(KnotControl kc) : base(25, 15)
         {
-            Knots = new KnotControl();
-            KnotVectorT = Knots.KnotVector(CPcounter);
+            KC = kc;
+            KC.Visible = true;
+            KnotVectorT = KC.Knots.KnotVector(CPcounter);
             BSplinePoints = CalculateBSpline();
         }
 
-
         public override bool Update(Point mouse)
         {
-            if (base.Update(mouse) || Knots.Update(mouse))
+            if (base.Update(mouse) || KC.Knots.Update(mouse))
             {
-                KnotVectorT = Knots.KnotVector(CPcounter);
+                KnotVectorT = KC.Knots.KnotVector(CPcounter);
                 BSplinePoints = CalculateBSpline();
                 return true;
-                
             }
             return false;
         }
@@ -36,7 +34,6 @@ namespace P2_BezierBSpline
         public override void Draw(Graphics G)
         {
             base.Draw(G);
-            Knots.Draw(G);
 
             for (int i = 0; i < BSplinePoints.Length - 1; i++)
             {
@@ -54,8 +51,8 @@ namespace P2_BezierBSpline
         {
             PointF[] Ps = new PointF[iterations];
 
-            float dist = (float)(CPcounter + Knots.Degree) / (float)iterations;
-            float U = Knots.Degree+1;
+            float dist = (float)(CPcounter -3) / (float)iterations;
+            float U = KC.Knots.Degree;
             for (int i = 0; i<iterations; i++ )
             {
                 Ps[i] = PointAt(U);
@@ -80,7 +77,7 @@ namespace P2_BezierBSpline
             float b = 0;
             for (int i = 0; i < CPcounter; i++)
             {
-                b = PointWeightB(valueU,i,Knots.Degree+1);
+                b = PointWeightB(valueU, i, KC.Knots.Degree + 1);
                 P = Add(P, Mult(b, ControlPoints[i]));
             }
             return P;

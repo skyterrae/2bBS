@@ -48,6 +48,12 @@
   <ItemGroup>
     <Compile Include="Bezier.cs" />
     <Compile Include="BSpline.cs" />
+    <Compile Include="KnotControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="KnotControl.Designer.cs">
+      <DependentUpon>KnotControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Knots.cs" />
     <Compile Include="Drawer.cs" />
     <Compile Include="Form1.cs">
@@ -60,6 +66,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KnotControl.resx">
+      <DependentUpon>KnotControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
