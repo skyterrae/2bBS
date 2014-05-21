@@ -17,7 +17,7 @@ namespace P2_BezierBSpline
 
         PointF[] bezierPoints;
 
-        public Bezier()
+        public Bezier() : base(12, 6)
         {
             DoCasteljau();
         }
@@ -48,25 +48,17 @@ namespace P2_BezierBSpline
             for (int i = 0; i < bezierPoints.Length - 1; i++)
             {
                 DrawBezierLine(G, i, i + 1);
-                DrawBezierPoint(G, i);
             }
-            DrawBezierPoint(G, bezierPoints.Length - 1);
         }
 
         private void DrawBezierLine(Graphics G, int indexA, int indexB)
         {
             //draw line on the form
-            G.DrawLine(new Pen(Brushes.Lavender, 2), bezierPoints[indexA], bezierPoints[indexB]);
+            G.DrawLine(new Pen(Brushes.Red, 2), bezierPoints[indexA], bezierPoints[indexB]);
         }
 
-        private void DrawBezierPoint(Graphics G, int index)
-        {
-            //draws point on the form
-            G.FillEllipse(Brushes.Purple, bezierPoints[index].X - 3, bezierPoints[index].Y - 3, 6, 6);
-            //G.DrawString("p" + (index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)CPs[index].X - 14, (float)CPs[index].Y - 16);
-        }
-
-        // The method that does the work. It returns an array filled with the points of the curve.
+        // The method that does the curve-calculating-work. 
+        // It returns an array filled with the points of the curve.
         // It will create a curve with 100 points as a default.
         private PointF[] DoCasteljau(int iterations = 100)
         { 
@@ -79,9 +71,9 @@ namespace P2_BezierBSpline
                 List<PointF> oldPoints = new List<PointF>();
                 List<PointF> restPoints = new List<PointF>();
 
-                for (int i = 0; i < CPs.Length; i++)
+                for (int i = 0; i < CPcounter; i++)
                 {
-                    oldPoints.Add(CPs[i]);
+                    oldPoints.Add(ControlPoints[i]);
                 }
 
                 while (oldPoints.Count > 1)
@@ -99,16 +91,12 @@ namespace P2_BezierBSpline
                         PointF bezier = new PointF(current.X + newX, current.Y + newY);
                         restPoints.Add(bezier);
                     }
-
                     oldPoints.Clear();
                     oldPoints = restPoints.ToList<PointF>();
                     restPoints.Clear();
                 }
-
                 bezierPoints[n - 1] = oldPoints[0];
-
             }
-
             return bezierPoints;
         }
     }

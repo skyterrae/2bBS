@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Bezier.cs" />
     <Compile Include="BSpline.cs" />
+    <Compile Include="Knots.cs" />
     <Compile Include="Drawer.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

@@ -9,22 +9,22 @@ namespace P2_BezierBSpline
     class Drawer
     {
 
-        protected Point[] CPs;
-        Point Location, ActivePoint, Mouse;
-        int MaxPoints, CPcounter, ActivePointIndex;
+        protected PointF[] ControlPoints;
+        protected PointF ActivePoint;
+        protected Point Location, Mouse;
+        protected int CPcounter, ActivePointIndex;
 
-        public Drawer()
+        public Drawer(int MaxPoints, int CurrPoints)
         {
             //constructor
             Location = Point.Empty;
-            MaxPoints = 6;
 
-            CPs = new Point[MaxPoints];
+            ControlPoints = new PointF[MaxPoints];
 
-            CPcounter = 6;
+            CPcounter = CurrPoints;
             for (int i = 0; i < CPcounter; i++)
             {
-                CPs[i] = new Point(Location.X + 50 + i * 20, Location.Y + 100 - (i % 2) * 50);
+                ControlPoints[i] = new Point(Location.X + 50 + i * 20, Location.Y + 100 - (i % 2) * 50);
             }
             ActivePointIndex = -1;
             ActivePoint = Point.Empty;
@@ -33,26 +33,26 @@ namespace P2_BezierBSpline
         public void AddPoint(int afterthisone)  //nog niet getest
         {
             //voegt een punt toe, als het max aantal puten nog niet bereikt is.
-            if (CPcounter < MaxPoints)
+            if (CPcounter < ControlPoints.Length)
             {
                 CPcounter++;
                 for (int i = CPcounter - 1; i > afterthisone; i--)
                 {
-                    CPs[i] = CPs[i - 1];
+                    ControlPoints[i] = ControlPoints[i - 1];
                 }
-                CPs[afterthisone + 1] = new Point((CPs[afterthisone].X + CPs[afterthisone + 1].X) / 2,
-                    (CPs[afterthisone].Y + CPs[afterthisone + 1].Y) / 2);
+                ControlPoints[afterthisone + 1] = new PointF((ControlPoints[afterthisone].X + ControlPoints[afterthisone + 1].X) / 2,
+                    (ControlPoints[afterthisone].Y + ControlPoints[afterthisone + 1].Y) / 2);
             }
         }
         public void DeletePoint(int thisone)   //nog niet getest
         {
             //haalt een punt weg.
-            if (CPcounter < CPs.Length)
+            if (CPcounter < ControlPoints.Length)
             {
                 //schuift levende punten op in de array
                 for (int i = thisone; i < CPcounter; i++)
                 {
-                    CPs[i] = CPs[i + 1];
+                    ControlPoints[i] = ControlPoints[i + 1];
                 }
                 CPcounter--;
             }
@@ -61,14 +61,14 @@ namespace P2_BezierBSpline
         protected void DrawLine(Graphics G, int indexA, int indexB)
         {
             //draw line on the form
-            G.DrawLine(new Pen(Brushes.PaleTurquoise, 2), CPs[indexA], CPs[indexB]);
+            G.DrawLine(new Pen(Brushes.PaleTurquoise, 2), ControlPoints[indexA], ControlPoints[indexB]);
         }
 
         protected void DrawPoint(Graphics G, int index)
         {
             //draws point on the form
-            G.FillEllipse(Brushes.Black, CPs[index].X - 4, CPs[index].Y - 4, 8, 8);
-            G.DrawString("p" + (index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)CPs[index].X - 14, (float)CPs[index].Y - 16);
+            G.FillEllipse(Brushes.Black, ControlPoints[index].X - 4, ControlPoints[index].Y - 4, 8, 8);
+            G.DrawString("p" + (index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)ControlPoints[index].X - 14, (float)ControlPoints[index].Y - 16);
         }
 
         public virtual void Draw(Graphics G)
@@ -87,9 +87,9 @@ namespace P2_BezierBSpline
             Mouse = new Point(Location.X + mouse.X, Location.Y + mouse.Y);
             //updates the selected point
             if (ActivePointIndex != -1 &&
-                Math.Abs(Mouse.X - CPs[ActivePointIndex].X) > 2 && Math.Abs(Mouse.Y - CPs[ActivePointIndex].Y) > 2)
+                Math.Abs(Mouse.X - ControlPoints[ActivePointIndex].X) > 2 && Math.Abs(Mouse.Y - ControlPoints[ActivePointIndex].Y) > 2)
             {
-                CPs[ActivePointIndex] = Mouse;
+                ControlPoints[ActivePointIndex] = Mouse;
                 return true;
             }
             return false;
@@ -103,9 +103,9 @@ namespace P2_BezierBSpline
             {
                 for (int i = 0; i < CPcounter; i++)
                 {
-                    if (Math.Abs(Mouse.X - CPs[i].X) < 20 && Math.Abs(Mouse.Y - CPs[i].Y) < 20)
+                    if (Math.Abs(Mouse.X - ControlPoints[i].X) < 20 && Math.Abs(Mouse.Y - ControlPoints[i].Y) < 20)
                     {
-                        ActivePoint = CPs[i];
+                        ActivePoint = ControlPoints[i];
                         ActivePointIndex = i;
                         break;
                     }
@@ -121,7 +121,7 @@ namespace P2_BezierBSpline
             //if a point is selected, deselect it
             if (ActivePointIndex != -1)
             {
-                CPs[ActivePointIndex] = Mouse;
+                ControlPoints[ActivePointIndex] = Mouse;
                 ActivePointIndex = -1;
                 ActivePoint = Point.Empty;
                 return true;

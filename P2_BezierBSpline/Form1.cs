@@ -16,7 +16,7 @@ namespace P2_BezierBSpline
         public MainForm()
         {
             InitializeComponent();
-            Curve = new Bezier();
+            Curve = new BSpline();
         }
 
         protected override void OnPaint(PaintEventArgs e)
