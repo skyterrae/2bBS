@@ -11,11 +11,13 @@ namespace P2_BezierBSpline
 {
     public partial class MainForm : Form
     {
-        Drawer Curve;
+        public static Drawer Curve;
+
 
         public MainForm()
         {
             InitializeComponent();
+            chLCurveChoise.SelectedIndex = 2;
             Curve = new BSpline(knotControl1);
         }
 
@@ -48,6 +50,31 @@ namespace P2_BezierBSpline
             if (Curve.Begin(new Point(e.X, e.Y)))
                 Refresh();
             
+        }
+
+        private void chLCurveChoise_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (chLCurveChoise.SelectedIndex)
+            {
+                case 0: Curve = new Bezier(); knotControl1.Visible = false; break;
+                case 1: Curve = new Bezier(); knotControl1.Visible = false; break;
+                case 2: Curve = new BSpline(knotControl1); knotControl1.Visible = true; break;
+            }
+            Refresh();
+        }
+
+        private void btnPointIncrease_Click(object sender, EventArgs e)
+        {
+            Curve.AddPoint();
+            Curve.Refresh();
+            Refresh();
+        }
+
+        private void btnPointDecrease_Click(object sender, EventArgs e)
+        {
+            Curve.DeletePoint();
+            Curve.Refresh();
+            Refresh();
         } 
     }
 }

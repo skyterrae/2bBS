@@ -22,15 +22,14 @@ namespace P2_BezierBSpline
             DoCasteljau();
         }
 
-        public override bool Update(Point mouse)
+        public override bool Update(PointF mouse)
         {
-            bool basebool = base.Update(mouse);
-
-            if (basebool)
+            if (base.Update(mouse))
             {
                 DoCasteljau();
+                return true;
             }
-            return basebool;
+            return false;
         }
 
         public override void Draw(Graphics G)
@@ -50,7 +49,10 @@ namespace P2_BezierBSpline
                 DrawBezierLine(G, i, i + 1);
             }
         }
-
+        public override void Refresh()
+        {
+            DoCasteljau();
+        }
         private void DrawBezierLine(Graphics G, int indexA, int indexB)
         {
             //draw line on the form
@@ -60,7 +62,7 @@ namespace P2_BezierBSpline
         // The method that does the curve-calculating-work. 
         // It returns an array filled with the points of the curve.
         // It will create a curve with 100 points as a default.
-        private PointF[] DoCasteljau(int iterations = 100)
+        private void DoCasteljau(int iterations = 100)
         { 
             bezierPoints = new PointF[iterations];
 
@@ -97,7 +99,6 @@ namespace P2_BezierBSpline
                 }
                 bezierPoints[n - 1] = oldPoints[0];
             }
-            return bezierPoints;
         }
     }
 }

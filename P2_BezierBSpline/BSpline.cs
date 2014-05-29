@@ -12,7 +12,7 @@ namespace P2_BezierBSpline
         KnotControl KC;
         float[] KnotVectorT;     
 
-        public BSpline(KnotControl kc) : base(25, 15)
+        public BSpline(KnotControl kc) : base(50, 12)
         {
             KC = kc;
             KC.Visible = true;
@@ -20,15 +20,20 @@ namespace P2_BezierBSpline
             BSplinePoints = CalculateBSpline();
         }
 
-        public override bool Update(Point mouse)
+        public override bool Update(PointF mouse)
         {
-            if (base.Update(mouse) || KC.Knots.Update(mouse))
+            if (base.Update(mouse) )
             {
                 KnotVectorT = KC.Knots.KnotVector(CPcounter);
                 BSplinePoints = CalculateBSpline();
                 return true;
             }
             return false;
+        }
+        public override void Refresh()
+        {
+            KnotVectorT = KC.Knots.KnotVector(CPcounter);
+            BSplinePoints = CalculateBSpline();
         }
 
         public override void Draw(Graphics G)
@@ -51,7 +56,7 @@ namespace P2_BezierBSpline
         {
             PointF[] Ps = new PointF[iterations];
 
-            float dist = (float)(CPcounter -3) / (float)iterations;
+            float dist = (float)(CPcounter -KC.Knots.Degree) / (float)iterations;
             float U = KC.Knots.Degree;
             for (int i = 0; i<iterations; i++ )
             {
@@ -61,16 +66,7 @@ namespace P2_BezierBSpline
 
             return Ps;
         }
-        private PointF Add(PointF A, PointF B)
-        {
-            // + operator tussen twee punten
-            return new PointF(A.X + B.X, A.Y + B.Y);
-        }
-        private PointF Mult(float c, PointF P)
-        {
-            // * operator tussen coeficient en punt
-            return new PointF(c*P.X, c*P.Y);
-        }
+        
         private PointF PointAt(float valueU)
         {
             PointF P = PointF.Empty;
@@ -78,7 +74,7 @@ namespace P2_BezierBSpline
             for (int i = 0; i < CPcounter; i++)
             {
                 b = PointWeightB(valueU, i, KC.Knots.Degree + 1);
-                P = Add(P, Mult(b, ControlPoints[i]));
+                P = StaticFunctions.Add(P, StaticFunctions.Mult(b, ControlPoints[i]));
             }
             return P;
         }

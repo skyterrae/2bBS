@@ -8,27 +8,35 @@ namespace P2_BezierBSpline
 {
     public class Drawer
     {
-
         protected PointF[] ControlPoints;
-        protected PointF ActivePoint;
-        protected Point Location, Mouse;
+        protected PointF ActivePoint, Mouse;
         protected int CPcounter, ActivePointIndex;
 
         public Drawer(int MaxPoints, int CurrPoints)
         {
             //constructor
-            Location = Point.Empty;
-
             ControlPoints = new PointF[MaxPoints];
 
             CPcounter = CurrPoints;
             for (int i = 0; i < CPcounter; i++)
             {
-                ControlPoints[i] = new Point(Location.X + 50 + i * 20, Location.Y + 100 - (i % 2) * 50);
+                ControlPoints[i] = new Point(50 + i * 20, 100 - (i % 2) * 50);
             }
             ActivePointIndex = -1;
             ActivePoint = Point.Empty;
         }
+
+        public void AddPoint()  //voegt een controlepunt toe aan het eind van de curve
+        {
+            //voegt een punt toe, als het max aantal puten nog niet bereikt is.
+            if (CPcounter < ControlPoints.Length-1)
+            {
+                CPcounter++;
+                ControlPoints[CPcounter] = new PointF(ControlPoints[CPcounter-1].X + 50, ControlPoints[CPcounter-1].Y + 50);
+            }
+        }
+        public virtual void Refresh()
+        { }
 
         public void AddPoint(int afterthisone)  //nog niet getest
         {
@@ -44,9 +52,18 @@ namespace P2_BezierBSpline
                     (ControlPoints[afterthisone].Y + ControlPoints[afterthisone + 1].Y) / 2);
             }
         }
+
+        public void DeletePoint()   //nog niet getest
+        {
+            //haalt laatste punt weg.
+            if(CPcounter >3)
+                CPcounter--;
+
+        }
+
         public void DeletePoint(int thisone)   //nog niet getest
         {
-            //haalt een punt weg.
+            //haalt aangegeven punt weg.
             if (CPcounter < ControlPoints.Length)
             {
                 //schuift levende punten op in de array
@@ -82,9 +99,9 @@ namespace P2_BezierBSpline
             DrawPoint(G, CPcounter - 1);
         }
 
-        public virtual bool Update(Point mouse)
+        public virtual bool Update(PointF mouse)
         {
-            Mouse = new Point(Location.X + mouse.X, Location.Y + mouse.Y);
+            setMouse(mouse);
             //updates the selected point
             if (ActivePointIndex != -1 &&
                 Math.Abs(Mouse.X - ControlPoints[ActivePointIndex].X) > 2 && Math.Abs(Mouse.Y - ControlPoints[ActivePointIndex].Y) > 2)
@@ -94,10 +111,13 @@ namespace P2_BezierBSpline
             }
             return false;
         }
-
-        public bool Begin(Point mouse)
+        public virtual void setMouse(PointF M)
         {
-            Mouse = new Point(Location.X + mouse.X, Location.Y + mouse.Y);
+            Mouse = M;
+        }
+        public virtual bool Begin(PointF mouse)
+        {
+            setMouse(mouse);
             //selects a point, if one is clicked on
             if (ActivePointIndex == -1)
             {
@@ -115,13 +135,13 @@ namespace P2_BezierBSpline
             return false;
         }
 
-        public bool End(Point mouse)
+        public virtual bool End(PointF mouse)
         {
-            Mouse = new Point(Location.X + mouse.X, Location.Y + mouse.Y);
+            setMouse(mouse);
             //if a point is selected, deselect it
             if (ActivePointIndex != -1)
             {
-                ControlPoints[ActivePointIndex] = Mouse;
+                ControlPoints[ActivePointIndex] = mouse;
                 ActivePointIndex = -1;
                 ActivePoint = Point.Empty;
                 return true;
