@@ -12,6 +12,16 @@ namespace P2_BezierBSpline
         protected PointF ActivePoint, Mouse;
         protected int CPcounter, ActivePointIndex;
 
+
+        public virtual int PointAmount
+        {
+            get { return CPcounter; }
+        }
+        public virtual int Degree
+        {
+            get { return CPcounter-1; }
+        }
+
         public Drawer(int MaxPoints, int CurrPoints)
         {
             //constructor
@@ -53,12 +63,11 @@ namespace P2_BezierBSpline
             }
         }
 
-        public void DeletePoint()   //nog niet getest
+        public void DeletePoint()   
         {
             //haalt laatste punt weg.
             if(CPcounter >3)
                 CPcounter--;
-
         }
 
         public void DeletePoint(int thisone)   //nog niet getest
@@ -85,7 +94,7 @@ namespace P2_BezierBSpline
         {
             //draws point on the form
             G.FillEllipse(Brushes.Black, ControlPoints[index].X - 4, ControlPoints[index].Y - 4, 8, 8);
-            G.DrawString("p" + (index).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)ControlPoints[index].X - 14, (float)ControlPoints[index].Y - 16);
+            G.DrawString("p" + (index+1).ToString(), MainForm.DefaultFont, Brushes.Blue, (float)ControlPoints[index].X - 14, (float)ControlPoints[index].Y - 16);
         }
 
         public virtual void Draw(Graphics G)

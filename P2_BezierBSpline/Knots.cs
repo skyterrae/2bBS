@@ -6,49 +6,57 @@ using System.Drawing;
 
 namespace P2_BezierBSpline
 {
-    public class KnotHandler : Drawer
+    public class KnotHandler
     {
-        public KnotHandler() : base(60, 3)
+        protected float[] KV;
+        int degree, ActiveKnotIndex;
+        float ActiveKnotValue, MouseX;
+
+
+        public KnotHandler(int KnotAmount, int Degree)
         {
-            setDefault();          
+            KV = new float[KnotAmount + 1];
+            degree = Degree;
+            ForceUniform();
+            ActiveKnotIndex = -1;
         }
-        public PointF getKnot(int i)
+        public int Degree
         {
-            return ControlPoints[i];
+            get { return degree; }
+            set 
+            { 
+                // past alleen de degree aan als er uberhaubt genoeg 
+                //controlepunten zijn om er nog een curve mee te kunnen maken 
+                if(value < KV.Length)
+                    degree = value; 
+            }
         }
 
-        private void setDefault()
-        {
-            //sets the knots and knotvector to a default
-            ForceUniform();
-            ControlPoints[0].Y = 0.8f;
-            ControlPoints[1].Y = 0.1f;
-            ControlPoints[2].Y = 0.1f;
-            //ControlPoints[3].Y = 0.2f;
-            //ControlPoints[4].Y = 0.1f;
-        }
         private void DrawKnotLine(Graphics G, int indexA, int indexB)
         {
             //draw line on the form
-            G.DrawLine(new Pen(Brushes.Lavender, 2), ControlPoints[indexA], ControlPoints[indexB]);
+            G.DrawLine(new Pen(Brushes.Lavender, 2), new PointF(KV[indexA],0), new PointF(KV[indexB],0));
+        }
+        private void setMouse(PointF mouse)
+        {
+            MouseX = mouse.X;
         }
 
-        public int Degree
-        {
-            get { return CPcounter; }
-        }
-        public override bool Begin(PointF mouse)
+        public bool Begin(PointF mouse)
         {
             setMouse(mouse);
+
             //selects a point, if one is clicked on
-            if (ActivePointIndex == -1)
+            if (ActiveKnotIndex == -1)
             {
-                for (int i = 0; i < CPcounter; i++)
+                for (int i = 0; i < KV.Length; i++)
                 {
-                    if (Math.Abs(Mouse.X - ControlPoints[i].X) < 0.05f && Math.Abs(Mouse.Y - ControlPoints[i].Y) < 0.05f)
+                    //vind het geselcteerde punt
+                    if (Math.Abs(MouseX - KV[i]) < 0.05f)
                     {
-                        ActivePoint = ControlPoints[i];
-                        ActivePointIndex = i;
+                        //activeerd de punt
+                        ActiveKnotValue = KV[i];
+                        ActiveKnotIndex = i;
                         break;
                     }
                 }
@@ -56,63 +64,71 @@ namespace P2_BezierBSpline
             }
             return false;
         }
-        public override bool Update(PointF mouse)
+        public bool Update(PointF mouse)
         {
             setMouse(mouse);
             //updates the selected point
-            if (ActivePointIndex != -1 
-                && Math.Abs(Mouse.X - ControlPoints[ActivePointIndex].X) < 0.05f
-                && Math.Abs(Mouse.Y - ControlPoints[ActivePointIndex].Y) < 0.05f
-                )
+            if (ActiveKnotIndex != -1 && Math.Abs(MouseX - KV[ActiveKnotIndex]) < 0.05f)
             {
+                //herberekend locatie van het bewegende punt
                 float X;
-                if (ActivePointIndex != 0 && ActivePointIndex != CPcounter)
-                    X = StaticFunctions.Clamp(mouse.X, ControlPoints[ActivePointIndex - 1].X, ControlPoints[ActivePointIndex+1].X);
+                if (ActiveKnotIndex != 0 && ActiveKnotIndex != KV.Length-1)
+                    X = StaticFunctions.Clamp(mouse.X, KV[ActiveKnotIndex - 1], KV[ActiveKnotIndex+1]);
                 else
-                    X = StaticFunctions.Clamp(mouse.X, 0, CPcounter);
+                    X = StaticFunctions.Clamp(mouse.X, 0, KV.Length-1);
                 float Y = StaticFunctions.Clamp(mouse.Y, -1, 1);
-                ControlPoints[ActivePointIndex] = new PointF(X, Y);
+                KV[ActiveKnotIndex] = X;
                 return true;
             }
             return false;
         }
-        public override bool End(PointF mouse)
+        public bool End(PointF mouse)
         {
             setMouse(mouse);
             //if a point is selected, deselect it
-            if (ActivePointIndex != -1)
+            if (ActiveKnotIndex != -1)
             {
+                //laatste herbereking van geselecteerd punt
                 float X;
-                if (ActivePointIndex == 0 || ActivePointIndex == CPcounter)
-                    X = StaticFunctions.Clamp(mouse.X, 0, CPcounter);
+                if (ActiveKnotIndex == 0 || ActiveKnotIndex == KV.Length-1)
+                    X = StaticFunctions.Clamp(mouse.X, 0, KV.Length - 1);
                 else
-                    X = StaticFunctions.Clamp(mouse.X, ControlPoints[ActivePointIndex - 1].X, ControlPoints[ActivePointIndex + 1].X);
-                
-                float Y = StaticFunctions.Clamp(mouse.Y, -1.0f, 1.0f);
-                ControlPoints[ActivePointIndex] = new PointF(X, Y);
-                ActivePointIndex = -1;
-                ActivePoint = Point.Empty;
+                    X = StaticFunctions.Clamp(mouse.X, KV[ActiveKnotIndex - 1], KV[ActiveKnotIndex + 1]);
+                KV[ActiveKnotIndex] = X;
+                ActiveKnotIndex = -1;
+                ActiveKnotValue = 0;
                 return true;
             }
             return false;
         }
 
-        private void ForceUniform()
+        public void ForceUniform()
         {
-            for (int i = 0; i < ControlPoints.Length; i++)
+            //forceert uniformiteit van de Knotvector
+            for (int i = 0; i < KV.Length; i++)
             {
-                ControlPoints[i].X = (float)i+1;
+                KV[i] = i+1;
             }
         }
-        public float[] KnotVector(int N)
+        public void ClampEnds()
         {
-            int KPlusN = N + CPcounter+1;
-            // haalt de KnotVector uit de plaatsing van de Knots(/controlpoints)
-            float[] KV = new float[KPlusN];
-            for (int i = 0; i < KPlusN; i++)
-                KV[i] = (float)ControlPoints[i].X;
-
-            return KV;
+            //maakt KnotVector zo dat het begin en eindpunt 
+            //in de Controlepunten geraakt worden door de Curve
+            for (int i = 0; i < KV.Length; i++)
+            {
+                //clampt beginpunt
+                if(0<=i && i<degree+1)
+                    KV[i] = degree+1;
+                //clampt eindpunt
+                else if ( KV.Length - degree <= i&& i < KV.Length)
+                    KV[i] = KV.Length - degree;
+                //maakt rest van de punten
+                else KV[i] = i+1;
+            }
+        }
+        public float[] KnotVector
+        {
+            get { return KV; }
         }
     }
 }

@@ -30,7 +30,7 @@
         {
             this.chLCurveChoise = new System.Windows.Forms.ComboBox();
             this.lblcurveChoise = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblPointAmount = new System.Windows.Forms.Label();
             this.btnPointIncrease = new System.Windows.Forms.Button();
             this.btnPointDecrease = new System.Windows.Forms.Button();
             this.knotControl1 = new P2_BezierBSpline.KnotControl();
@@ -59,15 +59,15 @@
             this.lblcurveChoise.TabIndex = 2;
             this.lblcurveChoise.Text = "Curve of Choise";
             // 
-            // label2
+            // lblPointAmount
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label2.Location = new System.Drawing.Point(820, 104);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(118, 20);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "PointAmount: 6";
+            this.lblPointAmount.AutoSize = true;
+            this.lblPointAmount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.lblPointAmount.Location = new System.Drawing.Point(820, 104);
+            this.lblPointAmount.Name = "lblPointAmount";
+            this.lblPointAmount.Size = new System.Drawing.Size(118, 20);
+            this.lblPointAmount.TabIndex = 3;
+            this.lblPointAmount.Text = "PointAmount: 6";
             // 
             // btnPointIncrease
             // 
@@ -105,12 +105,12 @@
             this.ClientSize = new System.Drawing.Size(970, 630);
             this.Controls.Add(this.btnPointDecrease);
             this.Controls.Add(this.btnPointIncrease);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lblPointAmount);
             this.Controls.Add(this.lblcurveChoise);
             this.Controls.Add(this.chLCurveChoise);
             this.Controls.Add(this.knotControl1);
             this.Name = "MainForm";
-            this.Text = "LiniarCurve";
+            this.Text = "BezierBSpline";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -121,7 +121,7 @@
         private KnotControl knotControl1;
         private System.Windows.Forms.ComboBox chLCurveChoise;
         private System.Windows.Forms.Label lblcurveChoise;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblPointAmount;
         private System.Windows.Forms.Button btnPointIncrease;
         private System.Windows.Forms.Button btnPointDecrease;
     }
