@@ -28,7 +28,7 @@ namespace P2_BezierBSpline
             ControlPoints = new PointF[MaxPoints];
 
             CPcounter = CurrPoints;
-            for (int i = 0; i < CPcounter; i++)
+            for (int i = 0; i < ControlPoints.Length; i++)
             {
                 ControlPoints[i] = new Point(50 + i * 20, 100 - (i % 2) * 50);
             }
@@ -36,13 +36,12 @@ namespace P2_BezierBSpline
             ActivePoint = Point.Empty;
         }
 
-        public void AddPoint()  //voegt een controlepunt toe aan het eind van de curve
+        public virtual void AddPoint()  //voegt een controlepunt toe aan het eind van de curve
         {
             //voegt een punt toe, als het max aantal puten nog niet bereikt is.
             if (CPcounter < ControlPoints.Length-1)
             {
                 CPcounter++;
-                ControlPoints[CPcounter] = new PointF(ControlPoints[CPcounter-1].X + 50, ControlPoints[CPcounter-1].Y + 50);
             }
         }
         public virtual void Refresh()
@@ -63,7 +62,7 @@ namespace P2_BezierBSpline
             }
         }
 
-        public void DeletePoint()   
+        public virtual void DeletePoint()   
         {
             //haalt laatste punt weg.
             if(CPcounter >3)

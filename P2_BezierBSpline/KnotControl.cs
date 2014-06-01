@@ -22,7 +22,7 @@ namespace P2_BezierBSpline
             ScaleX = 2 * (this.Width - 60) / ((knots.KnotVector.Length) * 2 +1); 
             ScaleY = -75.0f; 
             TransX = 30; 
-            TransY = 80;
+            TransY = 110;
         }
         public void setKnotAmount(int cpAmount)
         {
@@ -70,21 +70,23 @@ namespace P2_BezierBSpline
                 DrawHoriRaster(y, e.Graphics);
 
             //zwaardere lijnen bij de gehele getallen op de y-as (+benaming)
-            e.Graphics.DrawString("+1".ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(13, 5));
-            e.Graphics.DrawLine(new Pen(Brushes.Blue, 1), new Point(30, 5), new Point(this.Width - 30, 5));
-            e.Graphics.DrawString("0".ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(18, 72));
-            e.Graphics.DrawLine(new Pen(Brushes.Blue, 1), new Point(30, 80), new Point(this.Width - 30, 80));
-            e.Graphics.DrawString("-1".ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(13, 132));
-            e.Graphics.DrawLine(new Pen(Brushes.Blue, 1), new Point(30, 155), new Point(this.Width - 30, 155));
+            e.Graphics.DrawString("+1".ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(13, (int)TransY - 75));
+            e.Graphics.DrawLine(new Pen(Brushes.Blue, 1), new Point((int)TransX, (int)TransY - 75), new Point(this.Width - (int)TransX, (int)TransY - 75));
+            e.Graphics.DrawString("0".ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(18, (int)TransY-8));
+            e.Graphics.DrawLine(new Pen(Brushes.Blue, 1), new Point((int)TransX, (int)TransY), new Point(this.Width - (int)TransX, (int)TransY));
+            e.Graphics.DrawString("-1".ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(13, (int)TransY + 59));
+            e.Graphics.DrawLine(new Pen(Brushes.Blue, 1), new Point((int)TransX, (int)TransY + 75), new Point(this.Width - (int)TransX, (int)TransY + 75));
 
             //tekend locaties van de knots
             for (int i = 0; i < knots.KnotVector.Length; i++)
                 DrawVertiKnotLocation(i, e.Graphics);
+
+            knots.DrawBlendFunctions(e.Graphics, TransX, TransY, ScaleX, ScaleY);
         }
         private void DrawHoriRaster(float y, Graphics G)
         {
             //teken horizontale lijn
-            G.DrawLine(new Pen(Brushes.LightBlue, 1), new Point(30, (int)(TransY + y * ScaleY)), new Point(this.Width - 30, (int)(TransY + y * ScaleY)));
+            G.DrawLine(new Pen(Brushes.LightBlue, 1), new Point((int)TransX, (int)(TransY + y * ScaleY)), new Point(this.Width - (int)TransX, (int)(TransY + y * ScaleY)));
         }
         private void DrawVertiKnotLocation(int i, Graphics G)
         {
@@ -102,21 +104,21 @@ namespace P2_BezierBSpline
             if (x % 2 == 0 && x>0 && x<=knots.KnotVector.Length*2)
             {
                 //geeft lijn een x-coor-benaming
-                G.DrawString((x / 2).ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(coorX+1, 80));
+                G.DrawString((x / 2).ToString(), MainForm.DefaultFont, Brushes.Blue, new Point(coorX + 1, (int)TransY));
             }
 
             //lijnen per 0.5
-            G.DrawLine(P, new Point(coorX, 5), new Point(coorX, 155));
+            G.DrawLine(P, new Point(coorX, (int)TransY - 75), new Point(coorX, (int)TransY + 75));
 
             //lijnen aan zijnkant van raster
-            G.DrawLine(new Pen(Brushes.Blue, 1), new Point(30, 5), new Point(30, 155));
-            G.DrawLine(new Pen(Brushes.Blue, 1), new Point(this.Width - 30, 5), new Point(this.Width - 30, 155));
+            G.DrawLine(new Pen(Brushes.Blue, 1), new Point((int)TransX, (int)TransY - 75), new Point((int)TransX, (int)TransY + 75));
+            G.DrawLine(new Pen(Brushes.Blue, 1), new Point(this.Width - (int)TransX, (int)TransY - 75), new Point(this.Width - (int)TransX, (int)TransY + 75));
         }
 
         private void btnDegreeIncrease_Click(object sender, EventArgs e)
         {
-            if( knots.Degree < 12)
-                knots.Degree = knots.Degree + 1;
+            if (knots.Degree < 12 && knots.KnotVector.Length > 2*knots.Degree+2)
+                knots = new KnotHandler(knots.KnotVector.Length - knots.Degree+1, knots.Degree + 1);
             lblDegree.Text = "Degree: " + knots.Degree;
             MainForm.ActiveForm.Refresh();
         }
@@ -124,15 +126,9 @@ namespace P2_BezierBSpline
         private void lblDegreeDecrease_Click(object sender, EventArgs e)
         {
             if (knots.Degree > 2)
-            knots.Degree = knots.Degree - 1;
+                knots = new KnotHandler(knots.KnotVector.Length - knots.Degree+1, knots.Degree - 1);
             lblDegree.Text = "Degree: " + knots.Degree;
             MainForm.ActiveForm.Refresh();
-        }
-
-        private void btnForceClampEnds_Click(object sender, EventArgs e)
-        {
-            knots.ClampEnds();
-            Refresh();
         }
 
         private void btnForceUniform_Click(object sender, EventArgs e)

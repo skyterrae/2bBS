@@ -28,22 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnForceClampEnds = new System.Windows.Forms.Button();
             this.btnForceUniform = new System.Windows.Forms.Button();
             this.lblDegree = new System.Windows.Forms.Label();
             this.btnDegreeIncrease = new System.Windows.Forms.Button();
             this.lblDegreeDecrease = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // btnForceClampEnds
-            // 
-            this.btnForceClampEnds.Location = new System.Drawing.Point(582, 3);
-            this.btnForceClampEnds.Name = "btnForceClampEnds";
-            this.btnForceClampEnds.Size = new System.Drawing.Size(101, 23);
-            this.btnForceClampEnds.TabIndex = 0;
-            this.btnForceClampEnds.Text = "Force Clamp Ends";
-            this.btnForceClampEnds.UseVisualStyleBackColor = true;
-            this.btnForceClampEnds.Click += new System.EventHandler(this.btnForceClampEnds_Click);
             // 
             // btnForceUniform
             // 
@@ -94,7 +83,6 @@
             this.Controls.Add(this.btnDegreeIncrease);
             this.Controls.Add(this.lblDegree);
             this.Controls.Add(this.btnForceUniform);
-            this.Controls.Add(this.btnForceClampEnds);
             this.Name = "KnotControl";
             this.Size = new System.Drawing.Size(793, 233);
             this.ResumeLayout(false);
@@ -104,7 +92,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnForceClampEnds;
         private System.Windows.Forms.Button btnForceUniform;
         private System.Windows.Forms.Label lblDegree;
         private System.Windows.Forms.Button btnDegreeIncrease;

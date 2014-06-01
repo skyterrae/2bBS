@@ -59,8 +59,8 @@ namespace P2_BezierBSpline
         }
         public override void Refresh()
         {
-            base.Refresh();
             Curve.Refresh();
+            base.Refresh();
         }
         private void chLCurveChoise_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -32,6 +32,8 @@ namespace P2_BezierBSpline
             return false;
         }
 
+
+
         public override void Draw(Graphics G)
         {
             base.Draw(G);

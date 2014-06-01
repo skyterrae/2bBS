@@ -11,6 +11,14 @@ namespace P2_BezierBSpline
         PointF[] BSplinePoints;
         KnotControl KC;
 
+        public BSpline(KnotControl kc) : base(30, 12)
+        {
+            //constructor; begint met 12 controlepunten, max 30 controlepunten
+            KC = kc;
+            KC.Visible = true;
+            CalculateBSpline();
+        }
+
         public int N  //#controlepunten -1
         {
             get{  return CPcounter - 1;  }
@@ -23,14 +31,7 @@ namespace P2_BezierBSpline
         {
             get { return CPcounter + KC.Knots.Degree; }
         }
-
-        public BSpline(KnotControl kc) : base(30, 12)
-        {
-            //constructor; begint met 12 controlepunten
-            KC = kc;
-            KC.Visible = true;
-            BSplinePoints = CalculateBSpline();
-        }
+       
 
         public override bool Update(PointF mouse)
         {
@@ -45,7 +46,7 @@ namespace P2_BezierBSpline
         public override void Refresh()
         {
             //haalt Knotvector op en herberekend punten van de curve
-            BSplinePoints = CalculateBSpline();
+            CalculateBSpline();
         }
 
         public override void Draw(Graphics G)
@@ -54,10 +55,10 @@ namespace P2_BezierBSpline
             base.Draw(G);
 
             //tekend de curve
-            for (int i = 0; i < BSplinePoints.Length - 1; i++)
+            for (int i = (Degree+1) * KC.Knots.iterationsPerU; BSplinePoints != null && i < BSplinePoints.Length - Degree * KC.Knots.iterationsPerU-2; i++)
             {
                 DrawBSplineLine(G, i, i + 1);
-            }
+            }           
         }
 
         private void DrawBSplineLine(Graphics G, int indexA, int indexB)
@@ -66,62 +67,34 @@ namespace P2_BezierBSpline
             G.DrawLine(new Pen(Brushes.Blue, 2), BSplinePoints[indexA], BSplinePoints[indexB]);
         }
 
-        private PointF[] CalculateBSpline(int iterationsPerU = 15)
+        private void CalculateBSpline()
         {
             //berekend voor alle punten U op de curve hun positie
-            PointF[] Ps = new PointF[(N-1-Degree)*25];
-            float Uend = N;
-            float U = Degree+1;
-            int i = 0;
-            while(U<=Uend && i<Ps.Length)
+            BSplinePoints = new PointF[M * KC.Knots.iterationsPerU];
+            int U = 0;
+            while (U < BSplinePoints.Length)
             {
                 //berekend punt op positie U
-                Ps[i] = PointAt(U);
+                BSplinePoints[U] = PointAt(U);
                 //berekend volgende U
-                U = U + 0.04f;
-                i++;
+                U++;
             }
-
-            return Ps;
         }
         
-        private PointF PointAt(float valueU)
+        private PointF PointAt(int valueU)
         {
             //berekend het punt op de plek U op  de curve
 
             PointF P = PointF.Empty;
             float b = 0;
-            for (int i = 0; i < CPcounter - KC.Knots.Degree +1; i++)
+            for (int i = 0; i <= M && i < ControlPoints.Length; i++)
             {
                 //berekend per controlepunt hoeveel het meeteld en telt hem bij het geheel op
-                b = PointWeightB(valueU, i, KC.Knots.Degree);
+                b = KC.Knots.PointWeightB(valueU, i);
                 P = StaticFunctions.Add(P, StaticFunctions.Mult(b, ControlPoints[i]));
             }
             return P;
         }
-        private float PointWeightB(float ValueU, int shiftI, int localDegreeK)
-        {
-            //berekend hoeveel een (controle)punt mee zal tellen op plek U op de curve
 
-            float[] KnotVectorT = this.KC.Knots.KnotVector;
-
-            //bij laagste degree wordt telt het controle punt 100% mee.
-            if (localDegreeK == 1)
-            {
-                if (KnotVectorT[shiftI] <= ValueU && ValueU < KnotVectorT[shiftI + 1])
-                    return 1.0f;
-                else return 0;
-            }
-            //voor hogere degrees moeten we recursief het puntgewicht berekenen
-            //wiskunde uit Graphicsboek p 379
-            float A, B, C;
-            A = (ValueU - KnotVectorT[shiftI]) / (KnotVectorT[shiftI + localDegreeK - 1] - KnotVectorT[shiftI]);
-            B = (KnotVectorT[shiftI + localDegreeK] - ValueU) / (KnotVectorT[shiftI + localDegreeK] - KnotVectorT[shiftI + 1]);
-
-            C =   A * PointWeightB(ValueU, shiftI    , localDegreeK - 1)
-                + B * PointWeightB(ValueU, shiftI + 1, localDegreeK - 1);
-
-            return C;
-        }
     }
 }

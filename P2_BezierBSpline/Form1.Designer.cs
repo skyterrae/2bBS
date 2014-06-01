@@ -92,9 +92,9 @@
             // knotControl1
             // 
             this.knotControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.knotControl1.Location = new System.Drawing.Point(12, 458);
+            this.knotControl1.Location = new System.Drawing.Point(0, 430);
             this.knotControl1.Name = "knotControl1";
-            this.knotControl1.Size = new System.Drawing.Size(946, 160);
+            this.knotControl1.Size = new System.Drawing.Size(970, 200);
             this.knotControl1.TabIndex = 0;
             // 
             // MainForm
