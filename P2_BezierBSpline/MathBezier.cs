@@ -57,7 +57,7 @@ namespace P2_BezierBSpline
             for (int n = 1; n <= iterations ; n++)
             {
                 float u = (float)n / (float)iterations;
-                int graad = ControlPoints.Length;
+                int graad = CPcounter-1;
                 PointF pointF = PointF.Empty;
 
                 // Hier gaan we alle punten af.
@@ -65,11 +65,11 @@ namespace P2_BezierBSpline
                 // (graad over m) * (1-u)^(graad-m)*u^m*Pm
                 // Pm is het m-de punt.
                 // Gebruiken longs in berekening want graad over m gebruikt faculteit.
-                for (int m = 0; m < graad; m++)
+                for (int m = 0; m <= graad; m++)
                 {
                     double answer = Math.Pow(1 - u, graad - m);
                     answer *= Math.Pow(u, m);
-                    answer *= C(graad, m);
+                    answer *= C(graad, m); //(graad over m)
 
                     PointF p = StaticFunctions.Mult((float)answer, ControlPoints[m]);
                     pointF = StaticFunctions.Add(pointF, p);
