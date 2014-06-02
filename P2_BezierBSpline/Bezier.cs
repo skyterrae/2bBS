@@ -38,14 +38,6 @@ namespace P2_BezierBSpline
         {
             base.Draw(G);
 
-
-            // If the next part is uncommented it 'should' work.
-            // But it doesn't.... :)
-            // For now, it creates a red cross, and I don't know why...
-            // De Casteljau works partly atm.
-            // The y-coördinates seem to work, the x-coördinates don't at all, they range from 50-640
-            // While the original 4 points of the curve range from 50-110.
-
             for (int i = 0; i < bezierPoints.Length - 1; i++)
             {
                 DrawBezierLine(G, i, i + 1);

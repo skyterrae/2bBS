@@ -68,7 +68,7 @@ namespace P2_BezierBSpline
             switch (chLCurveChoise.SelectedIndex)
             {
                 case 0: Curve = new Bezier(); knotControl1.Visible = false; break;
-                case 1: Curve = new Bezier(); knotControl1.Visible = false; break;
+                case 1: Curve = new MathBezier(); knotControl1.Visible = false; break;
                 case 2: Curve = new BSpline(knotControl1); knotControl1.Visible = true; break;
             }
             lblPointAmount.Text = "PointAmount: " + Curve.PointAmount;
