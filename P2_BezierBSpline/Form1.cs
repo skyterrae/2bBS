@@ -20,8 +20,8 @@ namespace P2_BezierBSpline
 
             //zet de curve-keuzelijst op beginkeuze 
             //en initialiseerd de Curve als een curve van die soort
-            chLCurveChoise.SelectedIndex = 2;
-            Curve = new BSpline(knotControl1);
+            chLCurveChoise.SelectedIndex = 1;
+            Curve = new MathBezier();
         }
 
         protected override void OnPaint(PaintEventArgs e)

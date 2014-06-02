@@ -53,55 +53,46 @@ namespace P2_BezierBSpline
         private void DoMathBezier(int iterations = 100)
         {
             bezierPoints = new PointF[iterations];
-            List<PointF> oldPoints = new List<PointF>();
 
-            for (int i = 0; i < CPcounter; i++)
+            for (int n = 1; n <= iterations ; n++)
             {
-                oldPoints.Add(ControlPoints[i]);
-            }
+                float u = (float)n / (float)iterations;
+                int graad = ControlPoints.Length;
+                PointF pointF = PointF.Empty;
 
-            for (int n = 1; n < iterations + 1; n++)
-            {
-                float temp = n;
-                float u = temp / iterations;
-
-                int graad = oldPoints.Count;
-
-                // Weet alleen niet waar ik dit punt neerzet... :S
-                PointF pointF = new PointF(oldPoints[0].X, oldPoints[0].Y);
                 // Hier gaan we alle punten af.
                 // Eigenlijk de som van m = 0 tot graad, voor de volgende formule:
                 // (graad over m) * (1-u)^(graad-m)*u^m*Pm
                 // Pm is het m-de punt.
                 // Gebruiken longs in berekening want graad over m gebruikt faculteit.
-
                 for (int m = 0; m < graad; m++)
                 {
-                    double gFac = DoFactorial(graad);
-                    double mFac = DoFactorial(m);
-                    double gmFac = DoFactorial(graad - m);
-
-                    double factorial = gFac / (mFac * gmFac);
-
                     double answer = Math.Pow(1 - u, graad - m);
                     answer *= Math.Pow(u, m);
-                    answer *= factorial;
-                    double answerX = answer * oldPoints[m].X;
-                    double answerY = answer * oldPoints[m].Y;
+                    answer *= C(graad, m);
 
-                    pointF.X += (float)answerX;
-                    pointF.Y += (float)answerY;
+                    PointF p = StaticFunctions.Mult((float)answer, ControlPoints[m]);
+                    pointF = StaticFunctions.Add(pointF, p);
                 }
 
-                bezierPoints[n - 1] = pointF;
+                bezierPoints[n-1] = pointF;
             }
         }
+        private double C(int graad, int m)
+        {
+            double gFac = DoFactorial(graad);
+            double mFac = DoFactorial(m);
+            double gmFac = DoFactorial(graad - m);
 
+            double factorial = gFac / (mFac * gmFac);
+
+            return factorial;
+        }
         private double DoFactorial(int i)
         {
             double factorial = 1;
 
-            for (int j = 2; j == i; j++)
+            for (int j = 2; j <= i; j++)
             {
                 factorial *= j;
             }
