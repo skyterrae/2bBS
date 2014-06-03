@@ -6,8 +6,10 @@ using System.Drawing;
 
 namespace P2_BezierBSpline
 {
-    class BSpline : Drawer
+    class BSpline : CurveBase
     {
+        //classe die het tekenen en uitrekenen van een BSpline Curve handled
+        
         PointF[] BSplinePoints;
         KnotControl KC;
 
@@ -19,20 +21,37 @@ namespace P2_BezierBSpline
             CalculateBSpline();
         }
 
-        public int N  //#controlepunten -1
+        #region CalculateFunctions
+        private void CalculateBSpline()
         {
-            get{  return CPcounter - 1;  }
-        }
-        public override int Degree //degree / graad
+            //berekend voor alle punten U op de curve hun positie
+            BSplinePoints = new PointF[M * KC.Knots.iterationsPerU];
+            int U = 0;
+            while (U < BSplinePoints.Length)
+            {
+                //berekend punt op positie U
+                BSplinePoints[U] = PointAt(U);
+                //berekend volgende U
+                U++;
+            }
+        }      
+        private PointF PointAt(int valueU)
         {
-            get { return KC.Knots.Degree; }
-        }
-        public int M  //lengte knotvector: P+N+1
-        {
-            get { return CPcounter + KC.Knots.Degree; }
-        }
-       
+            //berekend het punt op de plek U op  de curve
 
+            PointF P = PointF.Empty;
+            float b = 0;
+            for (int i = 0; i <= M && i < ControlPoints.Length; i++)
+            {
+                //berekend per controlepunt hoeveel het meeteld en telt hem bij het geheel op
+                b = KC.Knots.getBfromDictionary(valueU, i);
+                P = PointMathHelper.Add(P, PointMathHelper.Mult(b, ControlPoints[i]));
+            }
+            return P;
+        }
+        #endregion
+
+        #region Override Update Functions
         public override bool Update(PointF mouse)
         {
             if (base.Update(mouse) )
@@ -48,7 +67,9 @@ namespace P2_BezierBSpline
             //haalt Knotvector op en herberekend punten van de curve
             CalculateBSpline();
         }
+        #endregion
 
+        #region DrawFunctions
         public override void Draw(Graphics G)
         {
             //tekend de controlepunten en contenthull
@@ -66,35 +87,21 @@ namespace P2_BezierBSpline
             //draw line on the form
             G.DrawLine(new Pen(Brushes.Blue, 2), BSplinePoints[indexA], BSplinePoints[indexB]);
         }
+        #endregion
 
-        private void CalculateBSpline()
+        #region Properties
+        public int N  //#controlepunten -1
         {
-            //berekend voor alle punten U op de curve hun positie
-            BSplinePoints = new PointF[M * KC.Knots.iterationsPerU];
-            int U = 0;
-            while (U < BSplinePoints.Length)
-            {
-                //berekend punt op positie U
-                BSplinePoints[U] = PointAt(U);
-                //berekend volgende U
-                U++;
-            }
+            get{  return CPcounter - 1;  }
         }
-        
-        private PointF PointAt(int valueU)
+        public override int Degree //degree / graad
         {
-            //berekend het punt op de plek U op  de curve
-
-            PointF P = PointF.Empty;
-            float b = 0;
-            for (int i = 0; i <= M && i < ControlPoints.Length; i++)
-            {
-                //berekend per controlepunt hoeveel het meeteld en telt hem bij het geheel op
-                b = KC.Knots.PointWeightB(valueU, i);
-                P = StaticFunctions.Add(P, StaticFunctions.Mult(b, ControlPoints[i]));
-            }
-            return P;
+            get { return KC.Knots.Degree; }
         }
-
+        public int M  //lengte knotvector: P+N+1
+        {
+            get { return CPcounter + KC.Knots.Degree; }
+        }
+        #endregion
     }
 }

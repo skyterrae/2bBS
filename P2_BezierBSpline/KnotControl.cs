@@ -19,6 +19,7 @@ namespace P2_BezierBSpline
             InitializeComponent();
             knots = new KnotHandler(12,3);
 
+            //zorgen voor juiste schaalomzetting bij het tekenen van de knotgerelateerde dingen
             ScaleX = 2 * (this.Width - 60) / ((knots.KnotVector.Length) * 2 +1); 
             ScaleY = -75.0f; 
             TransX = 30; 
@@ -26,6 +27,7 @@ namespace P2_BezierBSpline
         }
         public void setKnotAmount(int cpAmount)
         {
+            //maakt de knots opnieuw aan als het aantal controlepunten van de Curve verandeerd
             knots = new KnotHandler(cpAmount, knots.Degree);
             ScaleX = 2 * (this.Width - 60) / ((knots.KnotVector.Length) * 2 + 1); 
         }

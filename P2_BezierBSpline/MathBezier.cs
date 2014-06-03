@@ -7,48 +7,18 @@ using System.Drawing;
 
 namespace P2_BezierBSpline
 {
-    class MathBezier : Drawer
+    class MathBezier : CurveBase
     {
+        //classe die zorgt vor het uitrekenen en tekenen van een Wiskundig berekende BezierCurve
+
         PointF[] bezierPoints; // Array van de punten van de beziercurve. Wordt gevuld in de DoMathBezier-methode.
 
         public MathBezier() : base(12, 6)
         {
             DoMathBezier();
-        }
+        }    
 
-        public override bool Update(PointF mouse)
-        {
-            // Update de curve tijdens het verplaatsen van controlepunten
-            if (base.Update(mouse))
-            {
-                DoMathBezier();
-                return true;
-            }
-            return false;
-        }
-
-
-
-        public override void Draw(Graphics G)
-        {
-            // Tekent eerst de basispunten en lijnen.
-            base.Draw(G);
-
-            // En vervolgens wordt de beziercurve getekent m.b.v. de punten uit de bezierPoints array.
-            for (int i = 0; i < bezierPoints.Length - 1; i++)
-            {
-                DrawBezierLine(G, i, i + 1);
-            }
-        }
-        public override void Refresh()
-        {
-            DoMathBezier();
-        }
-        private void DrawBezierLine(Graphics G, int indexA, int indexB)
-        {
-            // Draw line on the form
-            G.DrawLine(new Pen(Brushes.Red, 2), bezierPoints[indexA], bezierPoints[indexB]);
-        }
+        #region Calculating Functions
 
         // De methode die de array oplevert met 100 punten van de beziercurve.
         // Er wordt geïtereerd over u = 0.01 tot 1.00.
@@ -70,8 +40,8 @@ namespace P2_BezierBSpline
                     answer *= Math.Pow(u, m);
                     answer *= C(graad, m); //(graad over m)
 
-                    PointF p = StaticFunctions.Mult((float)answer, ControlPoints[m]);
-                    pointF = StaticFunctions.Add(pointF, p);
+                    PointF p = PointMathHelper.Mult((float)answer, ControlPoints[m]);
+                    pointF = PointMathHelper.Add(pointF, p);
                 }
 
                 // Vervolgens wordt het nieuwgevonden punt toegevoegd aan de array van bezierpunten.
@@ -107,5 +77,43 @@ namespace P2_BezierBSpline
 
             return factorial;
         }
+        #endregion
+
+        #region Overrides van UpdateFunctions
+        public override void Refresh()
+        {
+            DoMathBezier();
+        }
+
+        public override bool Update(PointF mouse)
+        {
+            // Update de curve tijdens het verplaatsen van controlepunten
+            if (base.Update(mouse))
+            {
+                DoMathBezier();
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region DrawFunctions
+        public override void Draw(Graphics G)
+        {
+            // Tekent eerst de basispunten en lijnen.
+            base.Draw(G);
+
+            // En vervolgens wordt de beziercurve getekent m.b.v. de punten uit de bezierPoints array.
+            for (int i = 0; i < bezierPoints.Length - 1; i++)
+            {
+                DrawBezierLine(G, i, i + 1);
+            }
+        }
+        private void DrawBezierLine(Graphics G, int indexA, int indexB)
+        {
+            // Draw line on the form
+            G.DrawLine(new Pen(Brushes.Red, 2), bezierPoints[indexA], bezierPoints[indexB]);
+        }
+        #endregion
     }
 }
