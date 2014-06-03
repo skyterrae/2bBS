@@ -34,8 +34,10 @@ namespace P2_BezierBSpline
         {
             base.OnMouseMove(e);
             //changes context hull if a point is selected
-            if (Knots.Update(new PointF((((float)e.X- TransX) / ScaleX ), (((float)e.Y- TransY) / ScaleY ))))
-                Refresh();
+            if (Knots.Update(new PointF((((float)e.X - TransX) / ScaleX), (((float)e.Y - TransY) / ScaleY))))
+            {
+                Refresh(); //refreshed alleen de control omdat de verplaatsing nog niet af it
+            }
 
         }
         protected override void OnMouseUp(MouseEventArgs e)
@@ -44,7 +46,7 @@ namespace P2_BezierBSpline
             //deselects a point (if one is selected)
 
             if (Knots.End(new PointF((((float)e.X- TransX) / ScaleX ), (((float)e.Y- TransY) / ScaleY ))))
-                Refresh();
+                this.Parent.Refresh();  //refreshes ook de Mainform zodat de Curve getekend wordt aan de hand van de nieuwe Knotvector
         }
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -90,6 +92,7 @@ namespace P2_BezierBSpline
         }
         private void DrawVertiKnotLocation(int i, Graphics G)
         {
+            //tekend een lijn waar knot i zit op het assenstelsel
             int coorX = (int)(TransX + knots.KnotVector[i] * ScaleX );
             int coorY1 = (int)(TransY + 0.2f * ScaleY);
             int coorY2 = (int)(TransY + (-0.2f) * ScaleY);
@@ -117,24 +120,33 @@ namespace P2_BezierBSpline
 
         private void btnDegreeIncrease_Click(object sender, EventArgs e)
         {
-            if (knots.Degree < 12 && knots.KnotVector.Length > 2*knots.Degree+2)
-                knots = new KnotHandler(knots.KnotVector.Length - knots.Degree+1, knots.Degree + 1);
+            //verhoogt het aantal knots (en de graad)
+            if (knots.Degree < 12 && knots.KnotVector.Length > 2 * knots.Degree + 2)
+            {
+                knots = new KnotHandler(knots.KnotVector.Length - knots.Degree + 1, knots.Degree + 1);
+                ScaleX = 2 * (this.Width - 60) / ((knots.KnotVector.Length) * 2 + 1); 
+            }
             lblDegree.Text = "Degree: " + knots.Degree;
-            MainForm.ActiveForm.Refresh();
+            this.Parent.Refresh();
         }
 
         private void lblDegreeDecrease_Click(object sender, EventArgs e)
         {
+            //verlaagt het aantal knots (en de graad)
             if (knots.Degree > 2)
-                knots = new KnotHandler(knots.KnotVector.Length - knots.Degree+1, knots.Degree - 1);
+            {
+                knots = new KnotHandler(knots.KnotVector.Length - knots.Degree + 1, knots.Degree - 1);
+                ScaleX = 2 * (this.Width - 60) / ((knots.KnotVector.Length) * 2 + 1); 
+            }
             lblDegree.Text = "Degree: " + knots.Degree;
-            MainForm.ActiveForm.Refresh();
+            this.Parent.Refresh();
         }
 
         private void btnForceUniform_Click(object sender, EventArgs e)
         {
+            //zorgt ervoor dat de Knotvector uniform wordt zodat de Curve dat ook wordt.
             knots.ForceUniform();
-            Refresh();
+            this.Parent.Refresh();
         }
     }
 }

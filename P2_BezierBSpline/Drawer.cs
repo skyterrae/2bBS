@@ -39,7 +39,7 @@ namespace P2_BezierBSpline
         public virtual void AddPoint()  //voegt een controlepunt toe aan het eind van de curve
         {
             //voegt een punt toe, als het max aantal puten nog niet bereikt is.
-            if (CPcounter < ControlPoints.Length-1)
+            if (CPcounter < ControlPoints.Length)
             {
                 CPcounter++;
             }

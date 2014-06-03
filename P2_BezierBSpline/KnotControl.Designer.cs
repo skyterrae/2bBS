@@ -36,9 +36,10 @@
             // 
             // btnForceUniform
             // 
-            this.btnForceUniform.Location = new System.Drawing.Point(689, 3);
+            this.btnForceUniform.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.btnForceUniform.Location = new System.Drawing.Point(684, 3);
             this.btnForceUniform.Name = "btnForceUniform";
-            this.btnForceUniform.Size = new System.Drawing.Size(101, 23);
+            this.btnForceUniform.Size = new System.Drawing.Size(106, 23);
             this.btnForceUniform.TabIndex = 1;
             this.btnForceUniform.Text = "Force Uniform";
             this.btnForceUniform.UseVisualStyleBackColor = true;
@@ -48,7 +49,7 @@
             // 
             this.lblDegree.AutoSize = true;
             this.lblDegree.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblDegree.Location = new System.Drawing.Point(36, 3);
+            this.lblDegree.Location = new System.Drawing.Point(34, 6);
             this.lblDegree.Name = "lblDegree";
             this.lblDegree.Size = new System.Drawing.Size(79, 20);
             this.lblDegree.TabIndex = 2;
@@ -56,6 +57,7 @@
             // 
             // btnDegreeIncrease
             // 
+            this.btnDegreeIncrease.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.btnDegreeIncrease.Location = new System.Drawing.Point(121, 3);
             this.btnDegreeIncrease.Name = "btnDegreeIncrease";
             this.btnDegreeIncrease.Size = new System.Drawing.Size(75, 23);
@@ -66,9 +68,10 @@
             // 
             // lblDegreeDecrease
             // 
+            this.lblDegreeDecrease.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.lblDegreeDecrease.Location = new System.Drawing.Point(202, 3);
             this.lblDegreeDecrease.Name = "lblDegreeDecrease";
-            this.lblDegreeDecrease.Size = new System.Drawing.Size(75, 23);
+            this.lblDegreeDecrease.Size = new System.Drawing.Size(82, 23);
             this.lblDegreeDecrease.TabIndex = 4;
             this.lblDegreeDecrease.Text = "Decrease";
             this.lblDegreeDecrease.UseVisualStyleBackColor = true;

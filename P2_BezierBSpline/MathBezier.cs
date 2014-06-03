@@ -80,6 +80,7 @@ namespace P2_BezierBSpline
         }
         private double C(int graad, int m)
         {
+            //berekend (graad over m) 
             double gFac = DoFactorial(graad);
             double mFac = DoFactorial(m);
             double gmFac = DoFactorial(graad - m);
@@ -90,6 +91,7 @@ namespace P2_BezierBSpline
         }
         private double DoFactorial(int i)
         {
+            //berekend Faculteit(i)
             double factorial = 1;
 
             for (int j = 2; j <= i; j++)

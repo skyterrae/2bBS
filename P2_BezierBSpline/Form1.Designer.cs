@@ -38,14 +38,15 @@
             // 
             // chLCurveChoise
             // 
+            this.chLCurveChoise.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.chLCurveChoise.FormattingEnabled = true;
             this.chLCurveChoise.Items.AddRange(new object[] {
             "Bezier (Castillieau)",
             "Bezier (Math)",
-            "BSpline (Math)"});
-            this.chLCurveChoise.Location = new System.Drawing.Point(821, 37);
+            "BSpline"});
+            this.chLCurveChoise.Location = new System.Drawing.Point(770, 37);
             this.chLCurveChoise.Name = "chLCurveChoise";
-            this.chLCurveChoise.Size = new System.Drawing.Size(137, 21);
+            this.chLCurveChoise.Size = new System.Drawing.Size(137, 24);
             this.chLCurveChoise.TabIndex = 1;
             this.chLCurveChoise.SelectedIndexChanged += new System.EventHandler(this.chLCurveChoise_SelectedIndexChanged);
             // 
@@ -53,7 +54,7 @@
             // 
             this.lblcurveChoise.AutoSize = true;
             this.lblcurveChoise.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblcurveChoise.Location = new System.Drawing.Point(820, 14);
+            this.lblcurveChoise.Location = new System.Drawing.Point(766, 14);
             this.lblcurveChoise.Name = "lblcurveChoise";
             this.lblcurveChoise.Size = new System.Drawing.Size(121, 20);
             this.lblcurveChoise.TabIndex = 2;
@@ -63,17 +64,18 @@
             // 
             this.lblPointAmount.AutoSize = true;
             this.lblPointAmount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblPointAmount.Location = new System.Drawing.Point(820, 104);
+            this.lblPointAmount.Location = new System.Drawing.Point(766, 104);
             this.lblPointAmount.Name = "lblPointAmount";
-            this.lblPointAmount.Size = new System.Drawing.Size(118, 20);
+            this.lblPointAmount.Size = new System.Drawing.Size(175, 20);
             this.lblPointAmount.TabIndex = 3;
-            this.lblPointAmount.Text = "PointAmount: 6";
+            this.lblPointAmount.Text = "PointAmount/Degree: 6";
             // 
             // btnPointIncrease
             // 
-            this.btnPointIncrease.Location = new System.Drawing.Point(821, 127);
+            this.btnPointIncrease.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.btnPointIncrease.Location = new System.Drawing.Point(770, 127);
             this.btnPointIncrease.Name = "btnPointIncrease";
-            this.btnPointIncrease.Size = new System.Drawing.Size(59, 27);
+            this.btnPointIncrease.Size = new System.Drawing.Size(72, 27);
             this.btnPointIncrease.TabIndex = 4;
             this.btnPointIncrease.Text = "Increase";
             this.btnPointIncrease.UseVisualStyleBackColor = true;
@@ -81,9 +83,10 @@
             // 
             // btnPointDecrease
             // 
-            this.btnPointDecrease.Location = new System.Drawing.Point(886, 127);
+            this.btnPointDecrease.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.btnPointDecrease.Location = new System.Drawing.Point(848, 127);
             this.btnPointDecrease.Name = "btnPointDecrease";
-            this.btnPointDecrease.Size = new System.Drawing.Size(69, 27);
+            this.btnPointDecrease.Size = new System.Drawing.Size(77, 27);
             this.btnPointDecrease.TabIndex = 5;
             this.btnPointDecrease.Text = "Decrease";
             this.btnPointDecrease.UseVisualStyleBackColor = true;

@@ -24,6 +24,7 @@ namespace P2_BezierBSpline
 
         public override bool Update(PointF mouse)
         {
+            //update de curve tijdens het verplaatsen van controlepunten
             if (base.Update(mouse))
             {
                 DoCasteljau();
@@ -31,11 +32,9 @@ namespace P2_BezierBSpline
             }
             return false;
         }
-
-
-
         public override void Draw(Graphics G)
         {
+            //tekend de curve
             base.Draw(G);
 
             for (int i = 0; i < bezierPoints.Length - 1; i++)

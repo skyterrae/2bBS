@@ -12,6 +12,7 @@ namespace P2_BezierBSpline
     public partial class MainForm : Form
     {
         public static Drawer Curve;
+        string strPointAmount;
         
         public MainForm()
         {
@@ -21,6 +22,7 @@ namespace P2_BezierBSpline
             //zet de curve-keuzelijst op beginkeuze 
             //en initialiseerd de Curve als een curve van die soort
             chLCurveChoise.SelectedIndex = 1;
+            strPointAmount = "PointAmount/Degree: ";
             Curve = new MathBezier();
         }
 
@@ -60,6 +62,13 @@ namespace P2_BezierBSpline
         public override void Refresh()
         {
             Curve.Refresh();
+            //zet juiste Degree in de title van het form
+            if (chLCurveChoise.SelectedIndex != 2)
+                //als het een BezeirCurve is, haalt het de degree uit het aantal controlepunten
+                this.Text = chLCurveChoise.SelectedItem + "; Degree = " + Curve.PointAmount;
+            else
+                //als het een Bslpine is, haalt het de degree uit de knotControl
+                this.Text = chLCurveChoise.SelectedItem + "; Degree = " + knotControl1.Knots.Degree;
             base.Refresh();
         }
         private void chLCurveChoise_SelectedIndexChanged(object sender, EventArgs e)
@@ -67,11 +76,23 @@ namespace P2_BezierBSpline
             //veranderd de curve van soort als de keuzelijst-selectie veranderd.
             switch (chLCurveChoise.SelectedIndex)
             {
-                case 0: Curve = new Bezier(); knotControl1.Visible = false; break;
-                case 1: Curve = new MathBezier(); knotControl1.Visible = false; break;
-                case 2: Curve = new BSpline(knotControl1); knotControl1.Visible = true; break;
+                case 0: 
+                    Curve = new Bezier(); 
+                    knotControl1.Visible = false;
+                    strPointAmount = "PointAmount/Degree: ";
+                    break;
+                case 1: 
+                    Curve = new MathBezier(); 
+                    knotControl1.Visible = false; 
+                    strPointAmount = "PointAmount/Degree: ";
+                    break;            
+                case 2: 
+                    Curve = new BSpline(knotControl1); 
+                    knotControl1.Visible = true;
+                    strPointAmount = "PointAmount: ";
+                    break;
             }
-            lblPointAmount.Text = "PointAmount: " + Curve.PointAmount;
+            lblPointAmount.Text = strPointAmount + Curve.PointAmount;
             Refresh();
         }
 
@@ -79,7 +100,7 @@ namespace P2_BezierBSpline
         {
             //voegt een controlepunt toe aan de curve
             Curve.AddPoint();
-            lblPointAmount.Text = "PointAmount: " + Curve.PointAmount;
+            lblPointAmount.Text = strPointAmount + Curve.PointAmount;
             if (Curve is BSpline)
             {
                 knotControl1.setKnotAmount(Curve.PointAmount+1);
@@ -91,11 +112,12 @@ namespace P2_BezierBSpline
         {
             //haalt een controlepunt weg uit de curve.
             Curve.DeletePoint();
-            lblPointAmount.Text = "PointAmount: " + Curve.PointAmount;
-
+            lblPointAmount.Text = strPointAmount +Curve.PointAmount;
+            
             if (Curve is BSpline)
             {
-                knotControl1.setKnotAmount(Curve.PointAmount+1);
+                //update de KnotControl zodat hij het juiste aantal knots heeft
+                knotControl1.setKnotAmount(Curve.PointAmount + 1);
             }
             Refresh();
         } 

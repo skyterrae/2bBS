@@ -13,6 +13,7 @@ namespace P2_BezierBSpline
         public int iterationsPerU;
         float ActiveKnotValue, MouseX;
         private Dictionary<Point, float> B;
+        public bool refreshed;
 
         public KnotHandler(int KnotAmount, int Degree)
         {
@@ -31,6 +32,7 @@ namespace P2_BezierBSpline
         {
             B = new Dictionary<Point, float>();
             CalculatePointweights();
+            refreshed = true;
         }
         private void DrawKnotLine(Graphics G, int indexA, int indexB)
         {
@@ -69,7 +71,7 @@ namespace P2_BezierBSpline
         {
             setMouse(mouse);
             //updates the selected point
-            if (ActiveKnotIndex != -1 && Math.Abs(MouseX - KV[ActiveKnotIndex]) < 0.05f)
+            if (ActiveKnotIndex != -1)
             {
                 //herberekend locatie van het bewegende punt
                 float X;
@@ -112,15 +114,16 @@ namespace P2_BezierBSpline
             {
                 KV[i] = i+1;
             }
+            Refresh();
         }
         private void CalculatePointweights()
         {
             //precalculates the pointweights per shift and parameter value
-            for (int i = 1; i < KV.Length - degree; i++)
+            for (int i = 0; i < KV.Length; i++)
             {
-                int u = (int)(KV[degree] * iterationsPerU);
+                int u = 0;
                 float b;
-                while (u < (KV[KV.Length-degree])*iterationsPerU)
+                while (u < (KV[KV.Length-1])*iterationsPerU)
                 {
                     b = PointWeightB(u,i, degree);
                     if(Math.Abs(b)>0) //als gewicht is 0, dan niet in de dictionary
@@ -146,7 +149,7 @@ namespace P2_BezierBSpline
             float localU = (float)ValueU / (float)iterationsPerU;
             if (localDegreeK == 1)
             {
-                if (KV[shiftI] <= localU && localU < KV[shiftI + 1])
+                if (KnotVectorT(shiftI) <= localU && localU < KnotVectorT(shiftI + 1))
                     return 1.0f;
                 else return 0;
             }
@@ -154,8 +157,8 @@ namespace P2_BezierBSpline
             //wiskunde uit Graphicsboek p 379
             float A, B, C;
 
-            A = (localU - KV[shiftI]) / (KV[shiftI + localDegreeK - 1] - KV[shiftI]);
-            B = (KV[shiftI + localDegreeK] - localU) / (KV[shiftI + localDegreeK] - KV[shiftI + 1]);
+            A = (localU - KnotVectorT(shiftI)) / (KnotVectorT(shiftI + localDegreeK - 1) - KnotVectorT(shiftI));
+            B = (KnotVectorT(shiftI + localDegreeK) - localU) / (KnotVectorT(shiftI + localDegreeK) - KnotVectorT(shiftI + 1));
 
             C = A * PointWeightB(ValueU, shiftI, localDegreeK - 1)
                 + B * PointWeightB(ValueU, shiftI + 1, localDegreeK - 1);
@@ -167,6 +170,13 @@ namespace P2_BezierBSpline
             //tekend de gewichten van punten op in het knotVector-Yas
             foreach (KeyValuePair<Point, float> p in B)
                 G.DrawEllipse(new Pen(Brushes.Green), TransX+ ScaleX*((float)p.Key.Y/25.0f), p.Value*ScaleY+TransY,1,1);
+        }
+
+        private float KnotVectorT(int index)
+        {
+            if (index >= KV.Length)
+                return KV[KV.Length - 1];
+            else return KV[index];
         }
         public float[] KnotVector
         {
