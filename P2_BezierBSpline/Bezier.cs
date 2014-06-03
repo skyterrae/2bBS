@@ -9,13 +9,7 @@ namespace P2_BezierBSpline
 {
     class Bezier : Drawer
     {
-        // Okay, dit is plan:
-        // Met De Casteljau krijg je 1 punt van de Bezier-curve, niet de hele curve.
-        // Om toch een hele curve te krijgen herhaaldelijk De Casteljau uitvoeren.
-        // Voorlopig proberen 100 keer, dus een curve bestaande uit 100 punten.
-        // Dus 100 iteraties van De Casteljau over alle punten, met u = 0.01, u = 0.02, ..., u - 0.99, u = 1.00.
-
-        PointF[] bezierPoints;
+        PointF[] bezierPoints; // Array van de punten van de beziercurve. Wordt gevuld in de DoCasteljau-methode.
 
         public Bezier() : base(12, 6)
         {
@@ -24,7 +18,7 @@ namespace P2_BezierBSpline
 
         public override bool Update(PointF mouse)
         {
-            //update de curve tijdens het verplaatsen van controlepunten
+            // Update de curve tijdens het verplaatsen van controlepunten
             if (base.Update(mouse))
             {
                 DoCasteljau();
@@ -34,9 +28,10 @@ namespace P2_BezierBSpline
         }
         public override void Draw(Graphics G)
         {
-            //tekend de curve
+            // Tekent eerst de basispunten en lijnen.
             base.Draw(G);
 
+            // En vervolgens wordt de beziercurve getekent m.b.v. de punten uit de bezierPoints array.
             for (int i = 0; i < bezierPoints.Length - 1; i++)
             {
                 DrawBezierLine(G, i, i + 1);
@@ -48,17 +43,18 @@ namespace P2_BezierBSpline
         }
         private void DrawBezierLine(Graphics G, int indexA, int indexB)
         {
-            //draw line on the form
+            // Draw line on the form
             G.DrawLine(new Pen(Brushes.Red, 2), bezierPoints[indexA], bezierPoints[indexB]);
         }
 
-        // The method that does the curve-calculating-work. 
-        // It returns an array filled with the points of the curve.
-        // It will create a curve with 100 points as a default.
+        // Hier wordt de berekening van de curve gedaan. Standaard voor u = 0.01 tot 1.00.
+        // In iedere iteratie van u wordt over alle punten geïtereerd, om telkens het u-de deel van de lijn tussen die punten te pakken.
+        // Dit wordt herhaalt tot er nog 1 punt over is. Dit levert een lijst op met de 100 punten van de beziercurve.
         private void DoCasteljau(int iterations = 100)
         { 
             bezierPoints = new PointF[iterations];
 
+            // De iteratie over u.
             for (int n = 1; n < iterations + 1; n++)
             {
                 float temp = n;
@@ -71,6 +67,7 @@ namespace P2_BezierBSpline
                     oldPoints.Add(ControlPoints[i]);
                 }
 
+                // De iteratie over de punten.
                 while (oldPoints.Count > 1)
                 {
                     for (int i = 0; i < oldPoints.Count - 1; i++)
@@ -80,12 +77,14 @@ namespace P2_BezierBSpline
 
                         float newX, newY;
 
+                        // Nieuwe punt wordt berekent door verschil tussen de 2 punten keer u te doen.
                         newX = (next.X - current.X) * u;
                         newY = (next.Y - current.Y) * u;
 
                         PointF bezier = new PointF(current.X + newX, current.Y + newY);
                         restPoints.Add(bezier);
                     }
+                    // Als alle nieuwe punten zijn berekent wordt de lijst met oude punten gewist en vervangen door de nieuw berekende punten.
                     oldPoints.Clear();
                     oldPoints = restPoints.ToList<PointF>();
                     restPoints.Clear();

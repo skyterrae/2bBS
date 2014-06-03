@@ -9,7 +9,7 @@ namespace P2_BezierBSpline
 {
     class MathBezier : Drawer
     {
-        PointF[] bezierPoints;
+        PointF[] bezierPoints; // Array van de punten van de beziercurve. Wordt gevuld in de DoMathBezier-methode.
 
         public MathBezier() : base(12, 6)
         {
@@ -18,6 +18,7 @@ namespace P2_BezierBSpline
 
         public override bool Update(PointF mouse)
         {
+            // Update de curve tijdens het verplaatsen van controlepunten
             if (base.Update(mouse))
             {
                 DoMathBezier();
@@ -30,8 +31,10 @@ namespace P2_BezierBSpline
 
         public override void Draw(Graphics G)
         {
+            // Tekent eerst de basispunten en lijnen.
             base.Draw(G);
 
+            // En vervolgens wordt de beziercurve getekent m.b.v. de punten uit de bezierPoints array.
             for (int i = 0; i < bezierPoints.Length - 1; i++)
             {
                 DrawBezierLine(G, i, i + 1);
@@ -43,13 +46,15 @@ namespace P2_BezierBSpline
         }
         private void DrawBezierLine(Graphics G, int indexA, int indexB)
         {
-            //draw line on the form
+            // Draw line on the form
             G.DrawLine(new Pen(Brushes.Red, 2), bezierPoints[indexA], bezierPoints[indexB]);
         }
 
-        // The method that does the curve-calculating-work. 
-        // It returns an array filled with the points of the curve.
-        // It will create a curve with 100 points as a default.
+        // De methode die de array oplevert met 100 punten van de beziercurve.
+        // Er wordt geïtereerd over u = 0.01 tot 1.00.
+        // Per iteratie van u wordt de som berekent van de volgende formule (uit slides CurveIII):
+        // (graad over m) * (1-u)^(graad-m)*u^m*Pm
+        // Waarbij de som itereert van 0 tot de graad van de curve.
         private void DoMathBezier(int iterations = 100)
         {
             bezierPoints = new PointF[iterations];
@@ -59,12 +64,6 @@ namespace P2_BezierBSpline
                 float u = (float)n / (float)iterations;
                 int graad = CPcounter-1;
                 PointF pointF = PointF.Empty;
-
-                // Hier gaan we alle punten af.
-                // Eigenlijk de som van m = 0 tot graad, voor de volgende formule:
-                // (graad over m) * (1-u)^(graad-m)*u^m*Pm
-                // Pm is het m-de punt.
-                // Gebruiken longs in berekening want graad over m gebruikt faculteit.
                 for (int m = 0; m <= graad; m++)
                 {
                     double answer = Math.Pow(1 - u, graad - m);
@@ -75,9 +74,14 @@ namespace P2_BezierBSpline
                     pointF = StaticFunctions.Add(pointF, p);
                 }
 
+                // Vervolgens wordt het nieuwgevonden punt toegevoegd aan de array van bezierpunten.
                 bezierPoints[n-1] = pointF;
             }
         }
+
+        // Aparte methode om de graad over c te bereken, volgens deze formule:
+        // (x over y) = x! / (y!*(x-y)!).
+        // Wordt met doubles gewerkt vanwege de grootte van de getallen.
         private double C(int graad, int m)
         {
             //berekend (graad over m) 
@@ -89,6 +93,8 @@ namespace P2_BezierBSpline
 
             return factorial;
         }
+
+        // Aparte methode om faculteit te berekenen, aangezien die niet standaard in C#-library te vinden is.
         private double DoFactorial(int i)
         {
             //berekend Faculteit(i)
